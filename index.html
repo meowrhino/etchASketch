@@ -7,13 +7,17 @@
     <title>minesweeper v0</title>
 
     <style>
-        .yellow {
-            background-color: yellow;
-        }
-
         .gray,
         .one {
             background-color: gray;
+        }
+
+        .one:hover {
+            background-color: orangered;
+        }
+
+        .gray:hover {
+            background-color: yellow;
         }
 
         .clicked {
@@ -26,10 +30,6 @@
 
         .cursedHovered {
             background-color: whitesmoke;
-        }
-
-        .orange {
-            background-color: orangered;
         }
 
         .darkOrange {
@@ -134,13 +134,7 @@
 
                     /*pero si les pasa el cursor por encima se convertirán en amarillos*/
                     squareDiv.addEventListener('mouseover', () => {
-                        if (squareDiv.classList.contains("gray")) {
-                            squareDiv.classList.remove("gray");
-                            squareDiv.classList.add("yellow");
-                        } else if (squareDiv.classList.contains("one")) {
-                            squareDiv.classList.remove("one");
-                            squareDiv.classList.add("orange");
-                        } else if (squareDiv.classList.contains("orange")) {
+                        if (squareDiv.classList.contains("orange")) {
                             squareDiv.classList.remove("orange");
                             squareDiv.classList.add("darkOrange");
                         }
