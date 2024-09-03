@@ -23,6 +23,7 @@
         .cursed {
             background-color: lightgray;
         }
+
         .cursedHovered {
             background-color: whitesmoke;
         }
@@ -89,7 +90,7 @@
             if (gridLenght > 0) {
                 if (gridLenght > 100) {
                     alert("that's too much! must be an integer below 100");
-                } 
+                }
                 //esto debería pasar cuando cancelas, pero cuando cancelas gridLenght = 0, no sé por qué
                 else if (gridLenght == null) {
                     alert("you've cancelled the change");
@@ -188,13 +189,32 @@
 
             {
                 /*y ahora curseamos un square*/
-                const cursedSquareId = curseSquares(gridLenght);
-                const cursedSquare = document.getElementById(cursedSquareId);
-                cursedSquare.classList.remove("gray");
-                cursedSquare.classList.add("cursed");
+                //const cursedSquareId = curseSquares(gridLenght);
 
-                /*y marcamos los cuadrados que lo rodean*/
-                markNearSquares(cursedSquareId);
+                const cursedSquareId = [];
+                console.log(cursedSquareId.lenght)
+                const cursedSquare = [];
+
+                for (let i = 0; i < 5; i++) {
+                    console.log(`index number is ${i}`);
+
+                    cursedSquareId[i] = curseSquares(gridLenght);
+                    console.log(`cursed square number ${i} is ${cursedSquareId[i]}`);
+
+                    //y marcamos los cuadrados que lo rodean
+                    markNearSquares(cursedSquareId[i]);
+
+                    cursedSquare[i] = document.getElementById(cursedSquareId[i]);
+                    console.log(`cursed square is ${cursedSquare[i]}`);
+
+                    cursedSquare[i].classList.remove("gray");
+                    cursedSquare[i].classList.add("cursed");
+                    console.log('');
+                }
+
+                /*y ver que funcione con el de abajo!!!*/
+
+
             }
         }
 
@@ -258,6 +278,7 @@
             const checkCursed = verifySquare(cursedId);
             const square = document.getElementById(squareId);
 
+
             console.log(`checkSquare is ${checkSquare} && checkCursed is ${checkCursed}`)
 
             if (checkSquare === 1 || checkSquare === 2) {
@@ -280,6 +301,42 @@
             }
 
         }
+/*
+        function changeInto1(squareId, cursedId) {
+
+            const checkSquare = verifySquare(squareId);
+            const checkCursed = verifySquare(cursedId);
+            const square = document.getElementById(squareId);
+
+            if (square.classList.contains("cursed")) {
+                console.log("ITS A CURSED ONE");
+            } else if (square.classList.contains("one")) {
+                console.log("YA ESTÁ MARCADO");
+            }
+
+            console.log(`checkSquare is ${checkSquare} && checkCursed is ${checkCursed}`)
+
+            if (checkSquare === 1 || checkSquare === 2) {
+
+                if (checkSquare == checkCursed) {
+                    square.classList.remove("gray");
+                    square.classList.add("one");
+                } else if (checkCursed == 4 && checkSquare == 2) {
+                    square.classList.remove("gray");
+                    square.classList.add("one");
+                } else if (checkCursed == 3 && checkSquare == 1) {
+                    square.classList.remove("gray");
+                    square.classList.add("one");
+                }
+            }
+
+            else if (squareId >= 0) {
+                square.classList.remove("gray");
+                square.classList.add("one");
+            }
+
+        }
+        */
 
         function randomNumber(min, max) {
             return Math.floor(Math.random() * (max - min) + min);
