@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>etchASketch</title>
+    <title>minesweeper v0</title>
 
     <style>
         .yellow {
@@ -52,8 +52,8 @@
 
         .etchASketch {
             cursor: none;
-            width: 600px;
-            height: 600px;
+            width: 400px;
+            height: 400px;
         }
     </style>
 </head>
@@ -175,7 +175,8 @@
 
             {
                 /*y ahora curseamos un square*/
-                const cursedSquareId = curseSquares(gridLenght);
+                //const cursedSquareId = curseSquares(gridLenght);
+                const cursedSquareId = 63;
                 const cursedSquare = document.getElementById(cursedSquareId);
                 cursedSquare.classList.remove("gray");
                 cursedSquare.classList.add("cursed");
@@ -193,30 +194,20 @@
 
         function markNearSquares(cursedSquareId) {
 
-            /*el cuadrado superior*/
+            //el cuadrado superior e inferior
             const squareUpId = cursedSquareId - gridLenght;
-            changeInto1(squareUpId, cursedSquareId);
+            const squareDownId = cursedSquareId + gridLenght;
 
-            /*y el cuadrado de la esquina arriba izquierda*/
+            //el resto están ordenados de izquierda a derecha de arriba a abajo
             changeInto1(squareUpId - 1, cursedSquareId);
-
-            /*y el cuadrado de la esquina arriba derecha*/
+            changeInto1(squareUpId, cursedSquareId);
             changeInto1(squareUpId + 1, cursedSquareId);
 
-            /*y el cuadrado a la izquierda*/
             changeInto1(cursedSquareId - 1, cursedSquareId);
-
-            /*y el cuadrado a la derecha*/
             changeInto1(cursedSquareId + 1, cursedSquareId);
 
-            /*el cuadrado inferior y los del lado*/
-            const squareDownId = cursedSquareId + gridLenght;
-            changeInto1(squareDownId, cursedSquareId);
-
-            /*y el cuadrado de la esquina arriba izquierda*/
             changeInto1(squareDownId - 1, cursedSquareId);
-
-            /*y el cuadrado de la esquina arriba derecha*/
+            changeInto1(squareDownId, cursedSquareId);
             changeInto1(squareDownId + 1, cursedSquareId);
         }
 
@@ -224,7 +215,10 @@
 
             console.log(`squareToCheckId is ${squareToCheckId}`);
 
-            if (squareToCheckId % gridLenght == 0) {
+            if (squareToCheckId < 0) {
+                return false;
+            }
+            else if (squareToCheckId % gridLenght == 0) {
                 //está en la primera columna
                 return 1;
             }
@@ -246,27 +240,34 @@
             }
         }
 
-        function changeInto1(squareId, cursed) {
+        function changeInto1(squareId, cursedId) {
 
             const checkSquare = verifySquare(squareId);
+            const checkCursed = verifySquare(cursedId);
             const square = document.getElementById(squareId);
+
+            console.log(`checkSquare is ${checkSquare} && checkCursed is ${checkCursed}`)
 
             if (checkSquare === 1 || checkSquare === 2) {
 
-                if (cursed % gridLenght === 1) {
+                if (checkSquare == checkCursed) {
+                    square.classList.remove("gray");
+                    square.classList.add("one");
+                } else if (checkCursed == 4 && checkSquare == 2) {
+                    square.classList.remove("gray");
+                    square.classList.add("one");
+                } else if (checkCursed == 3 && checkSquare == 1) {
                     square.classList.remove("gray");
                     square.classList.add("one");
                 }
             }
-            
+
             else if (squareId >= 0) {
-                const square = document.getElementById(squareId);
                 square.classList.remove("gray");
                 square.classList.add("one");
             }
 
         }
-
 
         function randomNumber(min, max) {
             return Math.floor(Math.random() * (max - min) + min);
