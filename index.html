@@ -195,7 +195,9 @@
                 console.log(cursedSquareId.lenght)
                 const cursedSquare = [];
 
-                for (let i = 0; i < 5; i++) {
+                const numberOfCurses = 5;
+
+                for (let i = 0; i < numberOfCurses; i++) {
                     console.log(`index number is ${i}`);
 
                     cursedSquareId[i] = curseSquares(gridLenght);
@@ -206,6 +208,11 @@
 
                     cursedSquare[i] = document.getElementById(cursedSquareId[i]);
                     console.log(`cursed square is ${cursedSquare[i]}`);
+
+                    if (cursedSquare[i].classList.contains("one")) {
+                        cursedSquare[i].classList.remove("one");
+                        cursedSquare[i].classList.add("cursed");
+                    }
 
                     cursedSquare[i].classList.remove("gray");
                     cursedSquare[i].classList.add("cursed");
@@ -245,8 +252,6 @@
 
         function verifySquare(squareToCheckId) {
 
-            console.log(`squareToCheckId is ${squareToCheckId}`);
-
             if (squareToCheckId < 0) {
                 return false;
             }
@@ -274,44 +279,22 @@
 
         function changeInto1(squareId, cursedId) {
 
+            console.log(`squareToCheckId is ${squareId}`);
             const checkSquare = verifySquare(squareId);
             const checkCursed = verifySquare(cursedId);
             const square = document.getElementById(squareId);
 
-
-            console.log(`checkSquare is ${checkSquare} && checkCursed is ${checkCursed}`)
-
-            if (checkSquare === 1 || checkSquare === 2) {
-
-                if (checkSquare == checkCursed) {
-                    square.classList.remove("gray");
-                    square.classList.add("one");
-                } else if (checkCursed == 4 && checkSquare == 2) {
-                    square.classList.remove("gray");
-                    square.classList.add("one");
-                } else if (checkCursed == 3 && checkSquare == 1) {
-                    square.classList.remove("gray");
-                    square.classList.add("one");
-                }
+            if (square == null) {
+                console.log("that square DOES NOT exist");
+                return
             }
-
-            else if (squareId >= 0) {
-                square.classList.remove("gray");
-                square.classList.add("one");
-            }
-
-        }
-/*
-        function changeInto1(squareId, cursedId) {
-
-            const checkSquare = verifySquare(squareId);
-            const checkCursed = verifySquare(cursedId);
-            const square = document.getElementById(squareId);
 
             if (square.classList.contains("cursed")) {
                 console.log("ITS A CURSED ONE");
+                return
             } else if (square.classList.contains("one")) {
                 console.log("YA ESTÁ MARCADO");
+                return
             }
 
             console.log(`checkSquare is ${checkSquare} && checkCursed is ${checkCursed}`)
@@ -336,7 +319,6 @@
             }
 
         }
-        */
 
         function randomNumber(min, max) {
             return Math.floor(Math.random() * (max - min) + min);
