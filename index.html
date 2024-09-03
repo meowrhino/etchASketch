@@ -23,6 +23,9 @@
         .cursed {
             background-color: lightgray;
         }
+        .cursedHovered {
+            background-color: whitesmoke;
+        }
 
         .orange {
             background-color: orangered;
@@ -85,9 +88,11 @@
 
             if (gridLenght > 0) {
                 if (gridLenght > 100) {
-                    alert("that's too much! must be an integer below 100")
-                } else if (gridLenght == null) {
-                    alert("you've cancelled the change")
+                    alert("that's too much! must be an integer below 100");
+                } 
+                //esto debería pasar cuando cancelas, pero cuando cancelas gridLenght = 0, no sé por qué
+                else if (gridLenght == null) {
+                    alert("you've cancelled the change");
                 }
 
                 else {
@@ -95,7 +100,7 @@
                     createGrid();
                 }
             } else {
-                alert("grid lenght input must be an integer between 1 and 99")
+                alert("grid lenght input must be an integer between 1 and 99");
             }
         }
 
@@ -138,6 +143,10 @@
                             squareDiv.classList.remove("orange");
                             squareDiv.classList.add("darkOrange");
                         }
+                        else if (squareDiv.classList.contains("cursed")) {
+                            squareDiv.classList.remove("cursed");
+                            squareDiv.classList.add("cursedHovered");
+                        }
                     });
 
                     /*y cuando el cursor se vaya, volverán a ser grises*/
@@ -151,21 +160,25 @@
                             squareDiv.classList.remove("darkOrange");
                             squareDiv.classList.add("orange");
                         }
+                        else if (squareDiv.classList.contains("cursedHovered")) {
+                            squareDiv.classList.remove("cursedHovered");
+                            squareDiv.classList.add("cursed");
+                        }
 
                     });
 
                     /*y si se les hace click se ponen verde o rojos, segun esten cursed o no*/
                     squareDiv.addEventListener('click', () => {
 
-                        if (squareDiv.classList.contains("cursed")) {
-                            squareDiv.classList.remove("cursed");
+                        if (squareDiv.classList.contains("cursedHovered")) {
+                            squareDiv.classList.remove("cursedHovered");
                             squareDiv.classList.add("exploded");
                         }
-
-                        squareDiv.classList.remove("yellow");
-                        squareDiv.classList.add("clicked");
+                        else if (squareDiv.classList.contains("yellow")) {
+                            squareDiv.classList.remove("yellow");
+                            squareDiv.classList.add("clicked");
+                        }
                     });
-
 
                     rowDiv.appendChild(squareDiv)
                 }
@@ -175,8 +188,7 @@
 
             {
                 /*y ahora curseamos un square*/
-                //const cursedSquareId = curseSquares(gridLenght);
-                const cursedSquareId = 63;
+                const cursedSquareId = curseSquares(gridLenght);
                 const cursedSquare = document.getElementById(cursedSquareId);
                 cursedSquare.classList.remove("gray");
                 cursedSquare.classList.add("cursed");
