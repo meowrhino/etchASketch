@@ -10,11 +10,9 @@
         .empty {
             background-color: DarkGray;
         }
-
         .empty:hover {
             background-color: yellow;
         }
-
         .empty--clicked {
             background-color: LightGrey;
         }
@@ -22,82 +20,63 @@
         .one {
             background-color: gray;
         }
-
         .one:hover {
             background-color: orangered;
         }
-
         .one--clicked {
             background-color: Crimson;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .two {
             background-color: gray;
         }
-
         .two:hover {
             background-color: HotPink;
         }
-
         .two--clicked {
             background-color: MediumVioletRed;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .three {
             background-color: gray;
         }
-
         .three:hover {
             background-color: MediumOrchid;
         }
-
         .three--clicked {
             background-color: Purple;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .four {
             background-color: gray;
         }
-
         .four:hover {
             background-color: CornflowerBlue;
         }
-
         .four--clicked {
             background-color: DarkSlateBlue;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .cursed {
             background-color: snow;
         }
-
         .cursed:hover {
-            background-color: whitesmoke;
+            background-color: yellowgreen;
         }
-
         .cursed--clicked {
             background-color: maroon;
+        }
 
+        .one--clicked,
+        .two--clicked,
+        .three--clicked,
+        .four--clicked,
+        .cursed--clicked {
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
 
         .container {
             display: flex;
@@ -207,6 +186,7 @@
                         else if (squareDiv.classList.contains("empty")) {
                             squareDiv.classList.remove("empty");
                             squareDiv.classList.add("empty--clicked");
+                            //revealEmptySquares(squareDiv.id); // Revelar las casillas adyacentes
                             squareDiv.textContent = ""
                         } else if (squareDiv.classList.contains("one")) {
                             squareDiv.classList.remove("one");
@@ -233,59 +213,24 @@
                 etchASketch.appendChild(rowDiv);
             }
 
-            {
-                /*y ahora curseamos un square*/
-                //const cursedSquareId = curseSquares(gridLenght);
+            assignCursedSquares();  // Ahora asignamos las bombas después de crear la cuadrícula
+        }
 
-                const cursedSquareId = [];
-                console.log(cursedSquareId.lenght)
-                const cursedSquare = [];
+        function assignCursedSquares() {
+            const cursedSquareSet = new Set();
+            const numberOfCurses = 10;
 
-                const numberOfCurses = 10;
-
-                for (let i = 0; i < numberOfCurses; i++) {
-                    console.log(`index number is ${i}`);
-
-                    cursedSquareId[i] = curseSquares(gridLenght);
-                    console.log(`cursed square number ${i} is ${cursedSquareId[i]}`);
-
-                    //QUÉ PASA SI EL CUADRADO YA ESTÁ CURSED???
-
-                    /* if (cursedSquare[i].classList.contains("cursed")) {
-                         console.log(`cursed square number ${i} is already taken, trying again`)
-                         cursedSquareId[i] = curseSquares(gridLenght);
-                     }*/
-
-                    //y marcamos los cuadrados que lo rodean
-                    markNearSquares(cursedSquareId[i]);
-
-                    cursedSquare[i] = document.getElementById(cursedSquareId[i]);
-                    console.log(`cursed square is ${cursedSquare[i]}`);
-
-                    if (cursedSquare[i].classList.contains("one")
-                        || cursedSquare[i].classList.contains("two")
-                        || cursedSquare[i].classList.contains("three")
-                        || cursedSquare[i].classList.contains("four")) {
-                        cursedSquare[i].className = '';
-                        cursedSquare[i].classList.add("cursed");
-                    }
-
-                    if (cursedSquare[i].classList.contains("cursed")) {
-                        console.log(`cursed square number ${i} is already taken, trying again`)
-                        cursedSquareId[i] = curseSquares(gridLenght);
-                        console.log(`new cursed square is ${cursedSquare[i]}`);
-                        //como que ésto sólo lo soluciona si cuando se repita la función no tiene la mala pata de caer de nuevo en uno que ya esté cursed 
-                    }
-
-                    cursedSquare[i].classList.remove("empty");
-                    cursedSquare[i].classList.add("cursed");
-                    console.log('');
-                }
-
-                /*y ver que funcione con el de abajo!!!*/
-
-
+            while (cursedSquareSet.size < numberOfCurses) {
+                const cursedSquareId = randomNumber(0, gridLenght * gridLenght);
+                cursedSquareSet.add(cursedSquareId);  // Esto evita duplicados automáticamente
             }
+
+            cursedSquareSet.forEach(cursedSquareId => {
+                const cursedSquare = document.getElementById(cursedSquareId);
+                cursedSquare.className = '';
+                cursedSquare.classList.add("cursed");
+                markNearSquares(cursedSquareId);  // Actualizamos los números alrededor
+            });
         }
 
         function curseSquares() {
@@ -402,6 +347,49 @@
             }
 
         }
+
+        //no funciona esta funcion
+        function revealEmptySquares(squareId) {
+            const square = document.getElementById(squareId);
+
+            // Si la casilla ya ha sido revelada o no es vacía, no hacemos nada
+            if (!square || square.classList.contains("empty--clicked") || !square.classList.contains("empty")) {
+                return;
+            }
+
+            // Marcamos la casilla actual como clicada (revelada)
+            square.classList.remove("empty");
+            square.classList.add("empty--clicked");
+
+            // Array con las 8 direcciones alrededor de la casilla actual
+            const directions = [
+                -1, 1,                          // Izquierda, Derecha
+                -gridLenght, gridLenght,         // Arriba, Abajo
+                -gridLenght - 1, -gridLenght + 1, // Diagonales arriba izquierda/derecha
+                gridLenght - 1, gridLenght + 1   // Diagonales abajo izquierda/derecha
+            ];
+
+            // Recorremos las 8 direcciones
+            directions.forEach(dir => {
+                const newSquareId = parseInt(squareId) + dir;
+                const adjacentSquare = document.getElementById(newSquareId);
+
+                // Verificamos que la nueva casilla está dentro de los límites
+                if (newSquareId >= 0 && newSquareId < gridLenght * gridLenght) {
+
+                    // Evitar saltar de una fila a otra incorrectamente
+                    if ((dir === -1 || dir === 1) && Math.floor(newSquareId / gridLenght) !== Math.floor(squareId / gridLenght)) {
+                        return; // No saltar entre filas
+                    }
+
+                    // Solo revelamos si la casilla es vacía y no es una bomba o ya está revelada
+                    if (adjacentSquare && adjacentSquare.classList.contains("empty") && !adjacentSquare.classList.contains("empty--clicked")) {
+                        revealEmptySquares(newSquareId);  // Llamada recursiva para descubrir las casillas vacías adyacentes
+                    }
+                }
+            });
+        }
+
 
         function randomNumber(min, max) {
             return Math.floor(Math.random() * (max - min) + min);
