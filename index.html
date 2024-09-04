@@ -112,19 +112,30 @@
         <button class="gridLenghtBtn">
             change number of squares per side
         </button>
+
+        <button class="bombasNumberBtn">
+            change number of curses in game
+        </button>
     </div>
 
     <script>
         const container = document.querySelector(".container");
         const etchASketch = document.querySelector(".etchASketch");
         const gridLenghtBtn = document.querySelector(".gridLenghtBtn");
+        const bombasNumberBtn = document.querySelector(".bombasNumberBtn");
 
         gridLenghtBtn.addEventListener('click', () => {
             gridLenght = +prompt("what number of squares per side would you like?");
             updateGrid();
         });
 
+        bombasNumberBtn.addEventListener('click', () => {
+            numberOfCurses = +prompt("what number of curses");
+            updateGrid();
+        });
+
         let gridLenght = 8;
+        let numberOfCurses = 10;
         createGrid();
 
         function updateGrid() {
@@ -213,12 +224,12 @@
                 etchASketch.appendChild(rowDiv);
             }
 
-            assignCursedSquares();  // Ahora asignamos las bombas después de crear la cuadrícula
+            assignCursedSquares(numberOfCurses);  // Ahora asignamos las bombas después de crear la cuadrícula
         }
 
-        function assignCursedSquares() {
+        function assignCursedSquares(numCurses) {
             const cursedSquareSet = new Set();
-            const numberOfCurses = 10;
+            const numberOfCurses = numCurses;
 
             while (cursedSquareSet.size < numberOfCurses) {
                 const cursedSquareId = randomNumber(0, gridLenght * gridLenght);
@@ -340,15 +351,20 @@
                     square.classList.add("one");
                 }
             }
-
+            
             else if (squareId >= 0) {
                 square.classList.remove("empty");
                 square.classList.add("one");
             }
-
+            
+        }
+        
+        function randomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
         }
 
-        //no funciona esta funcion
+        //no funciona esta funcion 
+        /*
         function revealEmptySquares(squareId) {
             const square = document.getElementById(squareId);
 
@@ -389,12 +405,7 @@
                 }
             });
         }
-
-
-        function randomNumber(min, max) {
-            return Math.floor(Math.random() * (max - min) + min);
-        }
-
+        */
     </script>
 
 </body>
