@@ -7,37 +7,44 @@
     <title>minesweeper v0</title>
 
     <style>
-        .gray,
-        .one {
-            background-color: gray;
+        .empty {
+            background-color: DarkGray;
         }
 
-        .one:hover {
-            background-color: orangered;
-        }
-
-        .gray:hover {
+        .empty:hover {
             background-color: yellow;
         }
 
-        .clicked {
-            background-color: greenyellow;
+        .empty--clicked {
+            background-color: LightGrey;
+        }
+
+        .one {
+            background-color: gray;
+        }
+        .one:hover {
+            background-color: orangered;
+        }
+        .one--clicked {
+            background-color: red;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .cursed {
-            background-color: lightgray;
+            background-color: snow;
         }
-
-        .cursedHovered {
+        .cursed:hover {
             background-color: whitesmoke;
         }
+        .cursed--clicked {
+            background-color: maroon;
 
-        .darkOrange {
-            background-color: gold;
-        }
-
-        .exploded {
-            background-color: darkred;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
@@ -58,6 +65,10 @@
             cursor: none;
             width: 400px;
             height: 400px;
+        }
+
+        .empty {
+            color:aliceblue
         }
     </style>
 </head>
@@ -121,7 +132,8 @@
 
                     /*y creamos los cuadrados, que por defecto serán grises*/
                     let squareDiv = document.createElement("div");
-                    squareDiv.classList.add("gray");
+                    squareDiv.classList.add("empty");
+                    squareDiv.textContent = "";
 
                     /*calculamos cómo de grande han de ser*/
                     const sizeOfSquare = etchASketchWidth = etchASketch.offsetWidth / gridLenght;
@@ -132,46 +144,22 @@
                     el id es su numero en la fila */
                     squareDiv.id = i * gridLenght + j;
 
-                    /*pero si les pasa el cursor por encima se convertirán en amarillos*/
-                    squareDiv.addEventListener('mouseover', () => {
-                        if (squareDiv.classList.contains("orange")) {
-                            squareDiv.classList.remove("orange");
-                            squareDiv.classList.add("darkOrange");
-                        }
-                        else if (squareDiv.classList.contains("cursed")) {
-                            squareDiv.classList.remove("cursed");
-                            squareDiv.classList.add("cursedHovered");
-                        }
-                    });
-
-                    /*y cuando el cursor se vaya, volverán a ser grises*/
-                    squareDiv.addEventListener('mouseout', () => {
-                        if (squareDiv.classList.contains("clicked")) {
-
-                        } else if (squareDiv.classList.contains("yellow")) {
-                            squareDiv.classList.remove("yellow");
-                            squareDiv.classList.add("gray");
-                        } else if (squareDiv.classList.contains("darkOrange")) {
-                            squareDiv.classList.remove("darkOrange");
-                            squareDiv.classList.add("orange");
-                        }
-                        else if (squareDiv.classList.contains("cursedHovered")) {
-                            squareDiv.classList.remove("cursedHovered");
-                            squareDiv.classList.add("cursed");
-                        }
-
-                    });
-
                     /*y si se les hace click se ponen verde o rojos, segun esten cursed o no*/
                     squareDiv.addEventListener('click', () => {
 
-                        if (squareDiv.classList.contains("cursedHovered")) {
-                            squareDiv.classList.remove("cursedHovered");
-                            squareDiv.classList.add("exploded");
+                        if (squareDiv.classList.contains("cursed")) {
+                            squareDiv.classList.remove("cursed");
+                            squareDiv.classList.add("cursed--clicked");
+                            squareDiv.textContent = "🤬"
                         }
-                        else if (squareDiv.classList.contains("yellow")) {
-                            squareDiv.classList.remove("yellow");
-                            squareDiv.classList.add("clicked");
+                        else if (squareDiv.classList.contains("empty")) {
+                            squareDiv.classList.remove("empty");
+                            squareDiv.classList.add("empty--clicked");
+                            squareDiv.textContent = ""
+                        } else if (squareDiv.classList.contains("one")) {
+                            squareDiv.classList.remove("one");
+                            squareDiv.classList.add("one--clicked");
+                            squareDiv.textContent = "1"
                         }
                     });
 
@@ -208,7 +196,7 @@
                         cursedSquare[i].classList.add("cursed");
                     }
 
-                    cursedSquare[i].classList.remove("gray");
+                    cursedSquare[i].classList.remove("empty");
                     cursedSquare[i].classList.add("cursed");
                     console.log('');
                 }
@@ -296,19 +284,19 @@
             if (checkSquare === 1 || checkSquare === 2) {
 
                 if (checkSquare == checkCursed) {
-                    square.classList.remove("gray");
+                    square.classList.remove("empty");
                     square.classList.add("one");
                 } else if (checkCursed == 4 && checkSquare == 2) {
-                    square.classList.remove("gray");
+                    square.classList.remove("empty");
                     square.classList.add("one");
                 } else if (checkCursed == 3 && checkSquare == 1) {
-                    square.classList.remove("gray");
+                    square.classList.remove("empty");
                     square.classList.add("one");
                 }
             }
 
             else if (squareId >= 0) {
-                square.classList.remove("gray");
+                square.classList.remove("empty");
                 square.classList.add("one");
             }
 
