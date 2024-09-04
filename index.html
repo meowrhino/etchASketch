@@ -22,12 +22,62 @@
         .one {
             background-color: gray;
         }
+
         .one:hover {
             background-color: orangered;
         }
+
         .one--clicked {
             background-color: red;
-            
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .two {
+            background-color: gray;
+        }
+
+        .two:hover {
+            background-color: HotPink;
+        }
+
+        .two--clicked {
+            background-color: MediumVioletRed;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .three {
+            background-color: gray;
+        }
+
+        .three:hover {
+            background-color: MediumOrchid;
+        }
+
+        .three--clicked {
+            background-color: Purple;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .four {
+            background-color: gray;
+        }
+
+        .four:hover {
+            background-color: CornflowerBlue;
+        }
+
+        .four--clicked {
+            background-color: DarkSlateBlue;
+
             display: flex;
             align-items: center;
             justify-content: center;
@@ -36,9 +86,11 @@
         .cursed {
             background-color: snow;
         }
+
         .cursed:hover {
             background-color: whitesmoke;
         }
+
         .cursed--clicked {
             background-color: maroon;
 
@@ -68,7 +120,7 @@
         }
 
         .empty {
-            color:aliceblue
+            color: aliceblue
         }
     </style>
 </head>
@@ -160,6 +212,18 @@
                             squareDiv.classList.remove("one");
                             squareDiv.classList.add("one--clicked");
                             squareDiv.textContent = "1"
+                        } else if (squareDiv.classList.contains("two")) {
+                            squareDiv.classList.remove("two");
+                            squareDiv.classList.add("two--clicked");
+                            squareDiv.textContent = "2"
+                        } else if (squareDiv.classList.contains("three")) {
+                            squareDiv.classList.remove("three");
+                            squareDiv.classList.add("three--clicked");
+                            squareDiv.textContent = "3"
+                        } else if (squareDiv.classList.contains("four")) {
+                            squareDiv.classList.remove("four");
+                            squareDiv.classList.add("four--clicked");
+                            squareDiv.textContent = "4"
                         }
                     });
 
@@ -177,7 +241,7 @@
                 console.log(cursedSquareId.lenght)
                 const cursedSquare = [];
 
-                const numberOfCurses = 5;
+                const numberOfCurses = 10;
 
                 for (let i = 0; i < numberOfCurses; i++) {
                     console.log(`index number is ${i}`);
@@ -185,15 +249,31 @@
                     cursedSquareId[i] = curseSquares(gridLenght);
                     console.log(`cursed square number ${i} is ${cursedSquareId[i]}`);
 
+                    //QUÉ PASA SI EL CUADRADO YA ESTÁ CURSED???
+
+                    /* if (cursedSquare[i].classList.contains("cursed")) {
+                         console.log(`cursed square number ${i} is already taken, trying again`)
+                         cursedSquareId[i] = curseSquares(gridLenght);
+                     }*/
+
                     //y marcamos los cuadrados que lo rodean
                     markNearSquares(cursedSquareId[i]);
 
                     cursedSquare[i] = document.getElementById(cursedSquareId[i]);
                     console.log(`cursed square is ${cursedSquare[i]}`);
 
-                    if (cursedSquare[i].classList.contains("one")) {
-                        cursedSquare[i].classList.remove("one");
+                    if (cursedSquare[i].classList.contains("one") 
+                    || cursedSquare[i].classList.contains("two")
+                    || cursedSquare[i].classList.contains("three")
+                    || cursedSquare[i].classList.contains("four")) {
+                        cursedSquare[i].className = '';
                         cursedSquare[i].classList.add("cursed");
+                    }
+
+                    if (cursedSquare[i].classList.contains("cursed")) {
+                        console.log(`cursed square number ${i} is already taken, trying again`)
+                        cursedSquareId[i] = curseSquares(gridLenght);
+                        //como que ésto sólo lo soluciona si cuando se repita la función no tiene la mala pata de caer de nuevo en uno que ya esté cursed 
                     }
 
                     cursedSquare[i].classList.remove("empty");
@@ -275,7 +355,19 @@
                 console.log("ITS A CURSED ONE");
                 return
             } else if (square.classList.contains("one")) {
-                console.log("YA ESTÁ MARCADO");
+                console.log("UNO a DOS");
+                square.classList.remove("one");
+                square.classList.add("two");
+                return
+            } else if (square.classList.contains("two")) {
+                console.log("DOS a TRES");
+                square.classList.remove("two");
+                square.classList.add("three");
+                return
+            } else if (square.classList.contains("three")) {
+                console.log("TRES a CUATRO");
+                square.classList.remove("three");
+                square.classList.add("four");
                 return
             }
 
