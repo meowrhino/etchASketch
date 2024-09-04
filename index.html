@@ -262,10 +262,10 @@
                     cursedSquare[i] = document.getElementById(cursedSquareId[i]);
                     console.log(`cursed square is ${cursedSquare[i]}`);
 
-                    if (cursedSquare[i].classList.contains("one") 
-                    || cursedSquare[i].classList.contains("two")
-                    || cursedSquare[i].classList.contains("three")
-                    || cursedSquare[i].classList.contains("four")) {
+                    if (cursedSquare[i].classList.contains("one")
+                        || cursedSquare[i].classList.contains("two")
+                        || cursedSquare[i].classList.contains("three")
+                        || cursedSquare[i].classList.contains("four")) {
                         cursedSquare[i].className = '';
                         cursedSquare[i].classList.add("cursed");
                     }
@@ -295,23 +295,31 @@
         }
 
         function markNearSquares(cursedSquareId) {
-
-            //el cuadrado superior e inferior
+            // el cuadrado superior e inferior
             const squareUpId = cursedSquareId - gridLenght;
             const squareDownId = cursedSquareId + gridLenght;
 
-            //el resto están ordenados de izquierda a derecha de arriba a abajo
-            changeInto1(squareUpId - 1, cursedSquareId);
-            changeInto1(squareUpId, cursedSquareId);
-            changeInto1(squareUpId + 1, cursedSquareId);
+            // Calculamos los ids adyacentes y verificamos si están en la misma fila
+            const isNotFirstInRow = cursedSquareId % gridLenght !== 0; // no es la primera columna
+            const isNotLastInRow = (cursedSquareId + 1) % gridLenght !== 0; // no es la última columna
 
-            changeInto1(cursedSquareId - 1, cursedSquareId);
-            changeInto1(cursedSquareId + 1, cursedSquareId);
+            // El resto están ordenados de izquierda a derecha de arriba a abajo, pero verificamos que no crucen filas incorrectamente
+            if (isNotFirstInRow) {
+                changeInto1(squareUpId - 1, cursedSquareId); // diagonal arriba izquierda
+                changeInto1(cursedSquareId - 1, cursedSquareId); // izquierda
+                changeInto1(squareDownId - 1, cursedSquareId); // diagonal abajo izquierda
+            }
 
-            changeInto1(squareDownId - 1, cursedSquareId);
-            changeInto1(squareDownId, cursedSquareId);
-            changeInto1(squareDownId + 1, cursedSquareId);
+            changeInto1(squareUpId, cursedSquareId); // arriba
+            changeInto1(squareDownId, cursedSquareId); // abajo
+
+            if (isNotLastInRow) {
+                changeInto1(squareUpId + 1, cursedSquareId); // diagonal arriba derecha
+                changeInto1(cursedSquareId + 1, cursedSquareId); // derecha
+                changeInto1(squareDownId + 1, cursedSquareId); // diagonal abajo derecha
+            }
         }
+
 
         function verifySquare(squareToCheckId) {
 
