@@ -28,7 +28,7 @@
         }
 
         .one--clicked {
-            background-color: red;
+            background-color: Crimson;
 
             display: flex;
             align-items: center;
@@ -273,6 +273,7 @@
                     if (cursedSquare[i].classList.contains("cursed")) {
                         console.log(`cursed square number ${i} is already taken, trying again`)
                         cursedSquareId[i] = curseSquares(gridLenght);
+                        console.log(`new cursed square is ${cursedSquare[i]}`);
                         //como que ésto sólo lo soluciona si cuando se repita la función no tiene la mala pata de caer de nuevo en uno que ya esté cursed 
                     }
 
