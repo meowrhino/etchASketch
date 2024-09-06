@@ -10,9 +10,11 @@
         .empty {
             background-color: DarkGray;
         }
+
         .empty:hover {
             background-color: yellow;
         }
+
         .empty--clicked {
             background-color: LightGrey;
         }
@@ -20,9 +22,11 @@
         .one {
             background-color: gray;
         }
+
         .one:hover {
             background-color: orangered;
         }
+
         .one--clicked {
             background-color: Crimson;
         }
@@ -30,9 +34,11 @@
         .two {
             background-color: gray;
         }
+
         .two:hover {
             background-color: HotPink;
         }
+
         .two--clicked {
             background-color: MediumVioletRed;
         }
@@ -40,9 +46,11 @@
         .three {
             background-color: gray;
         }
+
         .three:hover {
             background-color: MediumOrchid;
         }
+
         .three--clicked {
             background-color: Purple;
         }
@@ -50,19 +58,71 @@
         .four {
             background-color: gray;
         }
+
         .four:hover {
             background-color: CornflowerBlue;
         }
+
         .four--clicked {
             background-color: DarkSlateBlue;
+        }
+
+        .five {
+            background-color: gray;
+        }
+
+        .five:hover {
+            background-color: Goldenrod;
+        }
+
+        .five--clicked {
+            background-color: DarkGoldenrod;
+        }
+
+        .six {
+            background-color: gray;
+        }
+
+        .six:hover {
+            background-color: chocolate;
+        }
+
+        .six--clicked {
+            background-color: saddlebrown;
+        }
+
+        .seven {
+            background-color: gray;
+        }
+
+        .seven:hover {
+            background-color: black;
+        }
+
+        .seven--clicked {
+            background-color: DarkSlateGray;
+        }
+
+        .eight {
+            background-color: gray;
+        }
+
+        .eight:hover {
+            background-color: black;
+        }
+
+        .eight--clicked {
+            background-color: OldLace;
         }
 
         .cursed {
             background-color: snow;
         }
+
         .cursed:hover {
             background-color: yellowgreen;
         }
+
         .cursed--clicked {
             background-color: maroon;
         }
@@ -71,6 +131,10 @@
         .two--clicked,
         .three--clicked,
         .four--clicked,
+        .five--clicked,
+        .six--clicked,
+        .seven--clicked,
+        .eight--clicked,
         .cursed--clicked {
             display: flex;
             align-items: center;
@@ -84,6 +148,7 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
+            font-family: monospace;
         }
 
         html,
@@ -93,9 +158,10 @@
         }
 
         .etchASketch {
-            cursor: none;
+            cursor: pointer;
             width: 400px;
             height: 400px;
+            display: none;
         }
 
         .empty {
@@ -109,13 +175,25 @@
         <div class="etchASketch">
         </div>
 
-        <button class="gridLenghtBtn">
-            change number of squares per side
+        <button class="newGame" style="display: none;">
+            restart
         </button>
 
-        <button class="bombasNumberBtn">
-            change number of curses in game
-        </button>
+        <div class="custom" style="display: none;">
+            <button class="gridLenghtBtn">
+                change number of squares per side
+            </button>
+
+            <button class="bombasNumberBtn">
+                change number of curses in game
+            </button>
+        </div>
+
+        <div class="difficulties">
+            <button class="easy">easy</button>
+            <button class="medium">medium</button>
+            <button class="hard">hard</button>
+        </div>
     </div>
 
     <script>
@@ -123,6 +201,13 @@
         const etchASketch = document.querySelector(".etchASketch");
         const gridLenghtBtn = document.querySelector(".gridLenghtBtn");
         const bombasNumberBtn = document.querySelector(".bombasNumberBtn");
+        const newGameBtn = document.querySelector(".newGame");
+
+        const easyGameBtn = document.querySelector(".easy");
+        const mediumGameBtn = document.querySelector(".medium");
+        const hardGameBtn = document.querySelector(".hard");
+
+        const customBtns = document.querySelector(".custom");
 
         gridLenghtBtn.addEventListener('click', () => {
             gridLenght = +prompt("what number of squares per side would you like?");
@@ -130,13 +215,42 @@
         });
 
         bombasNumberBtn.addEventListener('click', () => {
-            numberOfCurses = +prompt("what number of curses");
+            const newNumberOfCurses = +prompt("what number of curses");
+            if (newNumberOfCurses > gridLenght * gridLenght) {
+                alert("that's too many curses! >:P")
+            } else {
+                numberOfCurses = newNumberOfCurses;
+                updateGrid();
+            }
+        });
+
+        newGameBtn.addEventListener('click', () => {
+            gridLenght = +prompt(`what number of squares per side would you like? last one was ${gridLenght}`);
+            numberOfCurses = +prompt(`what number of curses would u like? last one was ${numberOfCurses}`);
+            if (numberOfCurses > gridLenght * gridLenght) {
+                alert("that's too many curses! >:P")
+            } else {
+                updateGrid();
+            }
+        });
+
+        easyGameBtn.addEventListener('click', () => {
+            gridLenght = 8;
+            numberOfCurses = 10;
             updateGrid();
         });
 
-        let gridLenght = 8;
-        let numberOfCurses = 10;
-        createGrid();
+        mediumGameBtn.addEventListener('click', () => {
+            gridLenght = 16;
+            numberOfCurses = 40;
+            updateGrid();
+        });
+
+        hardGameBtn.addEventListener('click', () => {
+            gridLenght = 20;
+            numberOfCurses = 100;
+            updateGrid();
+        });
 
         function updateGrid() {
 
@@ -161,6 +275,15 @@
         function createGrid() {
 
             etchASketch.innerHTML = '';
+
+            if (etchASketch.style.display == "") {
+                etchASketch.style.display = "block";
+                customBtns.style.display = "block";
+            }
+
+            if (newGameBtn.style.display == "block") {
+                newGameBtn.style.display = "none";
+            }
 
             for (let i = 0; i < gridLenght; i++) {
 
@@ -193,6 +316,7 @@
                             squareDiv.classList.remove("cursed");
                             squareDiv.classList.add("cursed--clicked");
                             squareDiv.textContent = "🤬"
+                            endGame();
                         }
                         else if (squareDiv.classList.contains("empty")) {
                             squareDiv.classList.remove("empty");
@@ -202,28 +326,50 @@
                         } else if (squareDiv.classList.contains("one")) {
                             squareDiv.classList.remove("one");
                             squareDiv.classList.add("one--clicked");
-                            squareDiv.textContent = "1"
+                            squareDiv.textContent = "1";
+                            checkWin();
                         } else if (squareDiv.classList.contains("two")) {
                             squareDiv.classList.remove("two");
                             squareDiv.classList.add("two--clicked");
-                            squareDiv.textContent = "2"
+                            squareDiv.textContent = "2";
+                            checkWin();
                         } else if (squareDiv.classList.contains("three")) {
                             squareDiv.classList.remove("three");
                             squareDiv.classList.add("three--clicked");
-                            squareDiv.textContent = "3"
+                            squareDiv.textContent = "3";
+                            checkWin();
                         } else if (squareDiv.classList.contains("four")) {
                             squareDiv.classList.remove("four");
                             squareDiv.classList.add("four--clicked");
-                            squareDiv.textContent = "4"
+                            squareDiv.textContent = "4";
+                            checkWin();
+                        } else if (squareDiv.classList.contains("five")) {
+                            squareDiv.classList.remove("five");
+                            squareDiv.classList.add("five--clicked");
+                            squareDiv.textContent = "5";
+                            checkWin();
+                        } else if (squareDiv.classList.contains("six")) {
+                            squareDiv.classList.remove("six");
+                            squareDiv.classList.add("six--clicked");
+                            squareDiv.textContent = "6";
+                            checkWin();
+                        } else if (squareDiv.classList.contains("seven")) {
+                            squareDiv.classList.remove("seven");
+                            squareDiv.classList.add("seven--clicked");
+                            squareDiv.textContent = "7";
+                            checkWin();
+                        } else if (squareDiv.classList.contains("eight")) {
+                            squareDiv.classList.remove("eight");
+                            squareDiv.classList.add("eight--clicked");
+                            squareDiv.textContent = "8";
+                            checkWin();
                         }
                     });
 
                     rowDiv.appendChild(squareDiv)
                 }
-
                 etchASketch.appendChild(rowDiv);
             }
-
             assignCursedSquares(numberOfCurses);  // Ahora asignamos las bombas después de crear la cuadrícula
         }
 
@@ -304,39 +450,99 @@
             }
         }
 
+        function endGame() {
+            // 1. Deshabilitar las casillas de inmediato para evitar más clics
+            const squares = document.querySelectorAll('.etchASketch div div');
+            squares.forEach(square => {
+                square.style.pointerEvents = 'none'; // Desactiva los clics en todas las casillas
+            });
+
+            // 2. Temporizador de suspenso (1 segundo) antes de revelar las bombas
+            setTimeout(() => {
+                // 3. Revelar todas las bombas después del temporizador
+                const cursedSquares = document.querySelectorAll('.cursed');
+                cursedSquares.forEach(cursedSquare => {
+                    cursedSquare.classList.remove("cursed");
+                    cursedSquare.classList.add("cursed--clicked");
+                    cursedSquare.textContent = "🤬";
+                });
+
+                // 4. Mostrar el mensaje de derrota
+                alert("¡Has perdido! 😵");
+
+            }, 1000); // Temporizador de 1000 milisegundos (1 segundo)
+            newGameBtn.style.display = "block";
+        }
+
+        function checkWin() {
+            // Seleccionar todas las casillas que no son ni empty ni cursed
+            const safeSquares = document.querySelectorAll('.etchASketch div div:not(.empty):not(.cursed)');
+
+            // Contar cuántas de esas casillas seguras han sido clicadas
+            const clickedSafeSquares = document.querySelectorAll('.one--clicked, .two--clicked, .three--clicked, .four--clicked, .five--clicked, .six--clicked, .seven--clicked, .eight--clicked');
+            //const clickedSafeAndEmptySquares = document.querySelectorAll('.one--clicked, .two--clicked, .three--clicked, .four--clicked, .five--clicked, .six--clicked, .seven--clicked, .eight--clicked, .empty');
+
+            let squaresLeft = +safeSquares.lenght - +clickedSafeSquares.lenght;
+
+            //console.log(`has clickado ${clickedSafeAndEmptySquares.lenght}, te quedan ${safeSquares.lenght - clickedSafeSquares.lenght} para ganar (no contamos los empties lo siento)`)
+            console.log(`clicked safe squares is ${clickedSafeSquares.length}, te faltan ${safeSquares.length - clickedSafeSquares.length} para ganar`);
+            //console.log(`clicked safe squares with empties is ${clickedSafeAndEmptySquares.length}`);
+
+            // Si el número de casillas seguras clicadas es igual al total de casillas seguras, el jugador gana
+            if (clickedSafeSquares.length === safeSquares.length) {
+                setTimeout(() => {
+                    alert("¡Felicidades! ¡Has ganado! 🎉");
+                    location.reload(); // Reiniciar el juego
+                }, 500);  // Pausa de 0.5 segundos antes de mostrar el mensaje de victoria
+            }
+        }
+
         function changeInto1(squareId, cursedId) {
 
-            console.log(`squareToCheckId is ${squareId}`);
+            //console.log(`squareToCheckId is ${squareId}`);
             const checkSquare = verifySquare(squareId);
             const checkCursed = verifySquare(cursedId);
             const square = document.getElementById(squareId);
 
             if (square == null) {
-                console.log("that square DOES NOT exist");
+                //console.log("that square DOES NOT exist");
                 return
             }
 
             if (square.classList.contains("cursed")) {
-                console.log("ITS A CURSED ONE");
+                //console.log("ITS A CURSED ONE");
                 return
             } else if (square.classList.contains("one")) {
-                console.log("UNO a DOS");
                 square.classList.remove("one");
                 square.classList.add("two");
                 return
             } else if (square.classList.contains("two")) {
-                console.log("DOS a TRES");
                 square.classList.remove("two");
                 square.classList.add("three");
                 return
             } else if (square.classList.contains("three")) {
-                console.log("TRES a CUATRO");
                 square.classList.remove("three");
                 square.classList.add("four");
                 return
+            } else if (square.classList.contains("four")) {
+                square.classList.remove("four");
+                square.classList.add("five");
+                return
+            } else if (square.classList.contains("five")) {
+                square.classList.remove("five");
+                square.classList.add("six");
+                return
+            } else if (square.classList.contains("six")) {
+                square.classList.remove("six");
+                square.classList.add("seven");
+                return
+            } else if (square.classList.contains("seven")) {
+                square.classList.remove("seven");
+                square.classList.add("eight");
+                return
             }
 
-            console.log(`checkSquare is ${checkSquare} && checkCursed is ${checkCursed}`)
+            //console.log(`checkSquare is ${checkSquare} && checkCursed is ${checkCursed}`)
 
             if (checkSquare === 1 || checkSquare === 2) {
 
@@ -351,14 +557,14 @@
                     square.classList.add("one");
                 }
             }
-            
+
             else if (squareId >= 0) {
                 square.classList.remove("empty");
                 square.classList.add("one");
             }
-            
+
         }
-        
+
         function randomNumber(min, max) {
             return Math.floor(Math.random() * (max - min) + min);
         }
