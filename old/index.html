@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>etchASketch</title>
+
+    <style>
+        .yellow {
+            background-color: yellow;
+        }
+
+        .gray,
+        .one {
+            background-color: gray;
+        }
+
+        .clicked {
+            background-color: greenyellow;
+        }
+
+        .cursed {
+            background-color: lightgray;
+        }
+
+        .orange {
+            background-color: orangered;
+        }
+
+        .darkOrange {
+            background-color: gold;
+        }
+
+        .exploded {
+            background-color: darkred;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        html,
+        body,
+        .container {
+            height: 100%;
+        }
+
+        .etchASketch {
+            cursor: none;
+            width: 600px;
+            height: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="etchASketch">
+        </div>
+
+        <button class="gridLenghtBtn">
+            change number of squares per side
+        </button>
+    </div>
+
+    <script>
+        const container = document.querySelector(".container");
+        const etchASketch = document.querySelector(".etchASketch");
+        const gridLenghtBtn = document.querySelector(".gridLenghtBtn");
+
+        gridLenghtBtn.addEventListener('click', () => {
+            gridLenght = +prompt("what number of squares per side would you like?");
+            updateGrid();
+        });
+
+        let gridLenght = 8;
+        createGrid();
+
+        function updateGrid() {
+
+            if (gridLenght > 0) {
+                if (gridLenght > 100) {
+                    alert("that's too much! must be an integer below 100")
+                } else if (gridLenght == null) {
+                    alert("you've cancelled the change")
+                }
+
+                else {
+                    gridLenght = gridLenght;
+                    createGrid();
+                }
+            } else {
+                alert("grid lenght input must be an integer between 1 and 99")
+            }
+        }
+
+        function createGrid() {
+
+            etchASketch.innerHTML = '';
+
+            for (let i = 0; i < gridLenght; i++) {
+
+                /*generamos las rows donde irán los cuadrados, que han de ser flex para que se pongan los cuadrados en linea uno tras otro*/
+                let rowDiv = document.createElement("div");
+                rowDiv.id = `row${i}`;
+                rowDiv.style.display = "flex";
+
+
+                for (let j = 0; j < gridLenght; j++) {
+
+                    /*y creamos los cuadrados, que por defecto serán grises*/
+                    let squareDiv = document.createElement("div");
+                    squareDiv.classList.add("gray");
+
+                    /*calculamos cómo de grande han de ser*/
+                    const sizeOfSquare = etchASketchWidth = etchASketch.offsetWidth / gridLenght;
+                    squareDiv.style.height = `${sizeOfSquare}px`;
+                    squareDiv.style.width = `${sizeOfSquare}px`;
+
+                    /*y les damos un ID a cada uno (para más tarde hacer algunos bomba)
+                    el id es su numero en la fila */
+                    squareDiv.id = i * gridLenght + j;
+
+                    /*pero si les pasa el cursor por encima se convertirán en amarillos*/
+                    squareDiv.addEventListener('mouseover', () => {
+                        if (squareDiv.classList.contains("gray")) {
+                            squareDiv.classList.remove("gray");
+                            squareDiv.classList.add("yellow");
+                        } else if (squareDiv.classList.contains("one")) {
+                            squareDiv.classList.remove("one");
+                            squareDiv.classList.add("orange");
+                        } else if (squareDiv.classList.contains("orange")) {
+                            squareDiv.classList.remove("orange");
+                            squareDiv.classList.add("darkOrange");
+                        }
+                    });
+
+                    /*y cuando el cursor se vaya, volverán a ser grises*/
+                    squareDiv.addEventListener('mouseout', () => {
+                        if (squareDiv.classList.contains("clicked")) {
+
+                        } else if (squareDiv.classList.contains("yellow")) {
+                            squareDiv.classList.remove("yellow");
+                            squareDiv.classList.add("gray");
+                        } else if (squareDiv.classList.contains("darkOrange")) {
+                            squareDiv.classList.remove("darkOrange");
+                            squareDiv.classList.add("orange");
+                        }
+
+                    });
+
+                    /*y si se les hace click se ponen verde o rojos, segun esten cursed o no*/
+                    squareDiv.addEventListener('click', () => {
+
+                        if (squareDiv.classList.contains("cursed")) {
+                            squareDiv.classList.remove("cursed");
+                            squareDiv.classList.add("exploded");
+                        }
+
+                        squareDiv.classList.remove("yellow");
+                        squareDiv.classList.add("clicked");
+                    });
+
+
+                    rowDiv.appendChild(squareDiv)
+                }
+
+                etchASketch.appendChild(rowDiv);
+            }
+
+            {
+                /*y ahora curseamos un square*/
+                const cursedSquareId = curseSquares(gridLenght);
+                const cursedSquare = document.getElementById(cursedSquareId);
+                cursedSquare.classList.remove("gray");
+                cursedSquare.classList.add("cursed");
+
+                /*y marcamos los cuadrados que lo rodean*/
+                markNearSquares(cursedSquareId);
+            }
+        }
+
+        function curseSquares() {
+            const totalSquares = gridLenght * gridLenght;
+            const cursedSquare = randomNumber(0, totalSquares);
+            return cursedSquare;
+        }
+
+        function markNearSquares(cursedSquareId) {
+
+            /*el cuadrado superior*/
+            const squareUpId = cursedSquareId - gridLenght;
+            changeInto1(squareUpId, cursedSquareId);
+
+            /*y el cuadrado de la esquina arriba izquierda*/
+            changeInto1(squareUpId - 1, cursedSquareId);
+
+            /*y el cuadrado de la esquina arriba derecha*/
+            changeInto1(squareUpId + 1, cursedSquareId);
+
+            /*y el cuadrado a la izquierda*/
+            changeInto1(cursedSquareId - 1, cursedSquareId);
+
+            /*y el cuadrado a la derecha*/
+            changeInto1(cursedSquareId + 1, cursedSquareId);
+
+            /*el cuadrado inferior y los del lado*/
+            const squareDownId = cursedSquareId + gridLenght;
+            changeInto1(squareDownId, cursedSquareId);
+
+            /*y el cuadrado de la esquina arriba izquierda*/
+            changeInto1(squareDownId - 1, cursedSquareId);
+
+            /*y el cuadrado de la esquina arriba derecha*/
+            changeInto1(squareDownId + 1, cursedSquareId);
+        }
+
+        function verifySquare(squareToCheckId) {
+
+            console.log(`squareToCheckId is ${squareToCheckId}`);
+
+            if (squareToCheckId % gridLenght == 0) {
+                //está en la primera columna
+                return 1;
+            }
+            else if (squareToCheckId % gridLenght == gridLenght - 1) {
+                //está en la última columna
+                return 2;
+            }
+            else if (squareToCheckId % gridLenght == 1) {
+                //está en la segunda columna
+                return 3;
+            }
+            else if (squareToCheckId % gridLenght == gridLenght - 2) {
+                //está en la penúltima columna
+                return 4;
+            }
+
+            else {
+                return false;
+            }
+        }
+
+        function changeInto1(squareId, cursed) {
+
+            const checkSquare = verifySquare(squareId);
+            const square = document.getElementById(squareId);
+
+            if (checkSquare === 1 || checkSquare === 2) {
+
+                if (cursed % gridLenght === 1) {
+                    square.classList.remove("gray");
+                    square.classList.add("one");
+                }
+            }
+            
+            else if (squareId >= 0) {
+                const square = document.getElementById(squareId);
+                square.classList.remove("gray");
+                square.classList.add("one");
+            }
+
+        }
+
+
+        function randomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+    </script>
+
+</body>
+
+</html>
